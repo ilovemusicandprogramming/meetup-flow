@@ -1,0 +1,48 @@
+package com.example.meetupflow.controller;
+
+import com.example.meetupflow.common.Result;
+import com.example.meetupflow.domain.Address;
+import com.example.meetupflow.domain.User;
+import com.example.meetupflow.dto.CreateUserRequest;
+import com.example.meetupflow.dto.CreateUserResponse;
+import com.example.meetupflow.dto.UserListResponse;
+import com.example.meetupflow.dto.UserResponse;
+import com.example.meetupflow.service.UserService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @GetMapping("/users")
+    public Result list(){
+        List<User> findUsers = userService.findUsers();
+        List<UserListResponse> collect = findUsers.stream()
+                .map(u -> new UserListResponse(u.getName(),u.getEmail(),u.getAddress()))
+                .collect(Collectors.toList());
+
+        return new Result(collect.size(), collect);
+    }
+
+    @GetMapping("/users/{id}")
+    public UserResponse get(@PathVariable Long id){
+        User findUser = userService.findOne(id);
+        return new UserResponse(findUser.getName(), findUser.getEmail(), findUser.getAddress(), findUser.getReservations());
+
+    }
+
+    @PostMapping("/users")
+    public CreateUserResponse create(@RequestBody @Valid CreateUserRequest request) {
+        Long id = userService.join(request.getName(), request.getEmail(), request.getAddress());
+        return new CreateUserResponse(id);
+    }
+}

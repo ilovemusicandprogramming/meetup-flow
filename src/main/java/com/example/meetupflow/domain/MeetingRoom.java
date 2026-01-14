@@ -1,8 +1,6 @@
 package com.example.meetupflow.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -14,12 +12,15 @@ public class MeetingRoom {
 
     @Id
     @GeneratedValue
-    @Column(name = "meetingRoom_id")
+    @Column(name = "meeting_room_id")
     private Long Id;
 
     private String name;
 
     private int capacity;
 
-    private double hourlyRate;
+    private int hourlyRate;
+
+    @OneToMany(mappedBy = "meetingRoom")
+    private List<Reservation> reservations = new ArrayList<>();
 }

@@ -1,13 +1,10 @@
-package com.example.meetupflow.dto;
+package com.example.meetupflow.dto.reservation;
 
 import com.example.meetupflow.domain.*;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Getter
 @NoArgsConstructor

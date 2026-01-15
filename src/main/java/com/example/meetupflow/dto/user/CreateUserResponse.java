@@ -1,4 +1,4 @@
-package com.example.meetupflow.dto;
+package com.example.meetupflow.dto.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

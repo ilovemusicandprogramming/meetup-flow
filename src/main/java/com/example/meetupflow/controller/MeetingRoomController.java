@@ -2,8 +2,9 @@ package com.example.meetupflow.controller;
 
 import com.example.meetupflow.common.Result;
 import com.example.meetupflow.domain.MeetingRoom;
-import com.example.meetupflow.domain.Reservation;
-import com.example.meetupflow.dto.*;
+import com.example.meetupflow.dto.meetingRoom.CreateMeetingRoomRequest;
+import com.example.meetupflow.dto.meetingRoom.CreateMeetingRoomResponse;
+import com.example.meetupflow.dto.meetingRoom.MeetingRoomListResponse;
 import com.example.meetupflow.service.MeetingRoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

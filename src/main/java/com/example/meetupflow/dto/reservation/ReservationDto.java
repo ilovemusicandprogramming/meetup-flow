@@ -1,4 +1,4 @@
-package com.example.meetupflow.dto;
+package com.example.meetupflow.dto.reservation;
 
 import com.example.meetupflow.domain.Reservation;
 import com.example.meetupflow.domain.ReservationStatus;

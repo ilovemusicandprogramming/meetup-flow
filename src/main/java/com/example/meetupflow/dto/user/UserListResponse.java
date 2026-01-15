@@ -1,4 +1,4 @@
-package com.example.meetupflow.dto;
+package com.example.meetupflow.dto.user;
 
 import com.example.meetupflow.domain.Address;
 import lombok.Getter;

@@ -1,16 +1,13 @@
 package com.example.meetupflow.controller;
 
 import com.example.meetupflow.common.Result;
-import com.example.meetupflow.domain.Address;
 import com.example.meetupflow.domain.User;
-import com.example.meetupflow.dto.CreateUserRequest;
-import com.example.meetupflow.dto.CreateUserResponse;
-import com.example.meetupflow.dto.UserListResponse;
-import com.example.meetupflow.dto.UserResponse;
+import com.example.meetupflow.dto.user.CreateUserRequest;
+import com.example.meetupflow.dto.user.CreateUserResponse;
+import com.example.meetupflow.dto.user.UserListResponse;
+import com.example.meetupflow.dto.user.UserResponse;
 import com.example.meetupflow.service.UserService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

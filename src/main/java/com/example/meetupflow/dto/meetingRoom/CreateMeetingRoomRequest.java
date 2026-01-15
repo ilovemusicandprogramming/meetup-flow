@@ -1,15 +1,7 @@
-package com.example.meetupflow.dto;
+package com.example.meetupflow.dto.meetingRoom;
 
-import com.example.meetupflow.domain.Reservation;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor

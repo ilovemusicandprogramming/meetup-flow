@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 public class InitDb {
     private final InitService initService;
 
-    @PostConstruct // 👈 의존관계 주입이 완료된 후 실행됨
+    @PostConstruct
     public void init() {
-        initService.dbInit1(); // 사용자, 회의실 등 기초 데이터
+        initService.dbInit1();
     }
 
     @Component

@@ -1,8 +1,8 @@
-package com.example.meetupflow.dto;
+package com.example.meetupflow.dto.user;
 
 import com.example.meetupflow.domain.Address;
-import com.example.meetupflow.domain.Reservation;
 import com.example.meetupflow.domain.User;
+import com.example.meetupflow.dto.reservation.ReservationDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

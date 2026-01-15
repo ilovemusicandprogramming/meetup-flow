@@ -1,7 +1,7 @@
 package com.example.meetupflow.domain;
 
 public enum ReservationStatus {
-    PENDING_PAYMENT,
+    PENDING,
     CONFIRMED,
     CANCELLED,
     EXPIRED

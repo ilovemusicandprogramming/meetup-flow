@@ -27,7 +27,7 @@ public class UserController {
     public Result list(){
         List<User> findUsers = userService.findUsers();
         List<UserListResponse> collect = findUsers.stream()
-                .map(u -> new UserListResponse(u.getName(),u.getEmail(),u.getAddress()))
+                .map(u -> new UserListResponse(u.getName(), u.getEmail(), u.getAddress()))
                 .collect(Collectors.toList());
 
         return new Result(collect.size(), collect);
@@ -36,8 +36,8 @@ public class UserController {
     @GetMapping("/users/{id}")
     public UserResponse get(@PathVariable Long id){
         User findUser = userService.findOne(id);
-        return new UserResponse(findUser.getName(), findUser.getEmail(), findUser.getAddress(), findUser.getReservations());
-
+//        return new UserResponse(findUser.getName(), findUser.getEmail(), findUser.getAddress(), findUser.getReservations());
+        return new UserResponse(findUser);
     }
 
     @PostMapping("/users")

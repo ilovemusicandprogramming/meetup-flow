@@ -35,4 +35,18 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    public static Reservation createReservation(MeetingRoom meetingRoom, User user, LocalDateTime startTime, LocalDateTime endTime) {
+        Reservation reservation = new Reservation();
+
+        reservation.meetingRoom = meetingRoom;
+        reservation.user = user;
+        reservation.startTime = startTime;
+        reservation.endTime = endTime;
+        reservation.reservationAt = LocalDateTime.now();
+        reservation.status = ReservationStatus.PENDING; // 예약 대기 상태 등
+
+        return reservation;
+    }
+
 }

@@ -2,7 +2,9 @@ package com.example.meetupflow.service;
 
 import com.example.meetupflow.domain.Address;
 import com.example.meetupflow.domain.User;
+import com.example.meetupflow.dto.user.UpdateUserRequest;
 import com.example.meetupflow.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,5 +41,14 @@ public class UserService {
         User user = User.createUser(name, email, address);
         userRepository.save(user);
         return user.getId();
+    }
+
+    /**
+     * 회원정보수정
+     */
+    @Transactional
+    public void updateUser(Long id, String email, Address address) {
+        User user = userRepository.findById(id).get();
+        user.updateUserProfile(email, address);
     }
 }

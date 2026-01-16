@@ -1,11 +1,9 @@
 package com.example.meetupflow.controller;
 
 import com.example.meetupflow.common.Result;
+import com.example.meetupflow.domain.Address;
 import com.example.meetupflow.domain.User;
-import com.example.meetupflow.dto.user.CreateUserRequest;
-import com.example.meetupflow.dto.user.CreateUserResponse;
-import com.example.meetupflow.dto.user.UserListResponse;
-import com.example.meetupflow.dto.user.UserResponse;
+import com.example.meetupflow.dto.user.*;
 import com.example.meetupflow.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,6 @@ public class UserController {
     @GetMapping("/users/{id}")
     public UserResponse get(@PathVariable Long id){
         User findUser = userService.findOne(id);
-//        return new UserResponse(findUser.getName(), findUser.getEmail(), findUser.getAddress(), findUser.getReservations());
         return new UserResponse(findUser);
     }
 
@@ -41,5 +38,18 @@ public class UserController {
     public CreateUserResponse create(@RequestBody @Valid CreateUserRequest request) {
         Long id = userService.join(request.getName(), request.getEmail(), request.getAddress());
         return new CreateUserResponse(id);
+    }
+
+    @PatchMapping("/users/{id}")
+    public UpdateUserResponse update(@PathVariable("id") Long id, @RequestBody @Valid UpdateUserRequest request){
+        Address newAddress = new Address(
+                request.getAddress().getCity(),
+                request.getAddress().getStreet(),
+                request.getAddress().getZipcode()
+        );
+
+        userService.updateUser(id, request.getEmail(), newAddress);
+        User updateUser = userService.findOne(id);
+        return new UpdateUserResponse(updateUser);
     }
 }

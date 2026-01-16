@@ -1,4 +1,4 @@
-package com.example.meetupflow.domain;
+package com.example.meetupflow.domain.status;
 
 public enum ReservationStatus {
     PENDING,

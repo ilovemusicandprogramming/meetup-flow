@@ -1,5 +1,7 @@
 package com.example.meetupflow.domain;
 
+import com.example.meetupflow.common.BaseEntity;
+import com.example.meetupflow.domain.status.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -10,29 +12,22 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-public class Reservation {
+public class Reservation extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "reservation_id")
     private Long id;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "meeting_room_id")
     private MeetingRoom meetingRoom;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
     private LocalDateTime startTime;
-
     private LocalDateTime endTime;
-
     private LocalDateTime reservationAt;
-
     private double totalAmount;
-
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
@@ -48,5 +43,4 @@ public class Reservation {
 
         return reservation;
     }
-
 }

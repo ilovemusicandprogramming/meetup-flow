@@ -32,15 +32,15 @@ public class InitDb {
 
         public void dbInit1() {
             User user1 = User.createUser("차윤호", "aaa@mail.com", new Address("서울", "마포구", "14545"));
-//            User user2 = User.createUser("홍길동", "bbb@mail.com", new Address("강원", "삼척시", "78978"));
+            User user2 = User.createUser("홍길동", "bbb@mail.com", new Address("강원", "삼척시", "78978"));
             em.persist(user1);
-//            em.persist(user2);
+            em.persist(user2);
 
             MeetingRoom room = MeetingRoom.createMeetingRoom("대회의실 A", 10, 50000);
             em.persist(room);
 
-            LocalDateTime start = LocalDateTime.of(2026, 1, 20, 14, 0); // 2026년 1월 20일 14시 0분
-            LocalDateTime end = LocalDateTime.of(2026, 1, 20, 16, 0);   // 2026년 1월 20일 16시 0분
+            LocalDateTime start = LocalDateTime.of(2027, 1, 20, 14, 0); // 2027년 1월 20일 14시 0분
+            LocalDateTime end = LocalDateTime.of(2027, 1, 20, 16, 0);   // 2027년 1월 20일 16시 0분
             Reservation res = Reservation.createReservation(room, user1, start, end);
             em.persist(res);
         }

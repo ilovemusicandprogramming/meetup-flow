@@ -1,5 +1,7 @@
 package com.example.meetupflow.domain;
 
+import com.example.meetupflow.common.BaseEntity;
+import com.example.meetupflow.domain.status.UserStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,22 +14,20 @@ import java.util.List;
 @Getter
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "user_id")
     private Long id;
-
     private String name;
-
     private String email;
-
     @Embedded
     private Address address;
-
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     public static User createUser(String name, String email, Address address) {
         if (name == null || name.isBlank()) {
@@ -42,8 +42,13 @@ public class User {
         user.name = name;
         user.email = email;
         user.address = address;
+        user.status = UserStatus.NORMAL;
 
         return user;
     }
 
+    public void updateUserProfile(String email, Address address) {
+        this.email = email;
+        this.address = address;
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.meetupflow.domain;
+package com.example.meetupflow.domain.status;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

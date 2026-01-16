@@ -1,7 +1,7 @@
 package com.example.meetupflow.dto.reservation;
 
 import com.example.meetupflow.domain.Reservation;
-import com.example.meetupflow.domain.ReservationStatus;
+import com.example.meetupflow.domain.status.ReservationStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

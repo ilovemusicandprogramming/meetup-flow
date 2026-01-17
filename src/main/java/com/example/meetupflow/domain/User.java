@@ -51,4 +51,8 @@ public class User extends BaseEntity {
         this.email = email;
         this.address = address;
     }
+
+    public void changeStatusToDeleted() {
+        this.status = UserStatus.WITHDRAWAL;
+    }
 }

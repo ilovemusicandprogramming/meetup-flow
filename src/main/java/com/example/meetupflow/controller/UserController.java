@@ -7,6 +7,7 @@ import com.example.meetupflow.dto.user.*;
 import com.example.meetupflow.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,5 +52,11 @@ public class UserController {
         userService.updateUser(id, request.getEmail(), newAddress);
         User updateUser = userService.findOne(id);
         return new UpdateUserResponse(updateUser);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> withdraw(@PathVariable Long id) {
+        userService.withdrawUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -51,4 +51,12 @@ public class UserService {
         User user = userRepository.findById(id).get();
         user.updateUserProfile(email, address);
     }
+
+    /**
+     * 회원탈퇴
+     */
+    public void withdrawUser(Long id) {
+        User user = userRepository.findById(id).get();
+        user.changeStatusToDeleted();
+    }
 }

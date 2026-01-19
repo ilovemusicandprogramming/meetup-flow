@@ -16,6 +16,6 @@ public class UpdateMeetingRoomResponse {
         this.id = meetingRoom.getId();
         this.name = meetingRoom.getName();
         this.capacity = meetingRoom.getCapacity();
-        this.hourlyRate = meetingRoom.getCapacity();
+        this.hourlyRate = meetingRoom.getHourlyRate();
     }
 }

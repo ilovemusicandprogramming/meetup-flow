@@ -9,6 +9,7 @@ import com.example.meetupflow.dto.user.UpdateUserResponse;
 import com.example.meetupflow.service.MeetingRoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,5 +46,11 @@ public class MeetingRoomController {
         meetingRoomService.updateMeetingRoom(id, request.getName(), request.getCapacity(), request.getHourlyRate());
         MeetingRoom updateMeetingRoom = meetingRoomService.findOne(id);
         return new UpdateMeetingRoomResponse(updateMeetingRoom);
+    }
+
+    @DeleteMapping("/meetingRooms/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        meetingRoomService.deleteMeetingRoom(id);
+        return ResponseEntity.noContent().build();
     }
 }

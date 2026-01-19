@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -47,5 +48,13 @@ public class MeetingRoomService {
     public void updateMeetingRoom(Long id, String name, int capacity, int hourlyRate) {
         MeetingRoom meetingRoom = meetingRoomRepository.findById(id).get();
         meetingRoom.updateProfile(name, capacity, hourlyRate);
+    }
+
+    /**
+     * 미팅룸삭제
+     */
+    public void deleteMeetingRoom(Long id) {
+        MeetingRoom meetingRoom = meetingRoomRepository.findById(id).get();
+        meetingRoom.changeStatusToDeleted();
     }
 }

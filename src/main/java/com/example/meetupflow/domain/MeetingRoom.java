@@ -1,6 +1,8 @@
 package com.example.meetupflow.domain;
 
 import com.example.meetupflow.common.BaseEntity;
+import com.example.meetupflow.domain.status.MeetingRoomStatus;
+import com.example.meetupflow.domain.status.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -19,6 +21,8 @@ public class MeetingRoom extends BaseEntity {
     private String name;
     private int capacity;
     private int hourlyRate;
+    @Enumerated(EnumType.STRING)
+    private MeetingRoomStatus status;
     @OneToMany(mappedBy = "meetingRoom")
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -28,6 +32,7 @@ public class MeetingRoom extends BaseEntity {
         meetingRoom.name = name;
         meetingRoom.capacity = capacity;
         meetingRoom.hourlyRate = hourlyRate;
+        meetingRoom.status = MeetingRoomStatus.AVAILABLE;
 
         return meetingRoom;
     }
@@ -40,5 +45,9 @@ public class MeetingRoom extends BaseEntity {
         this.name = name;
         this.capacity = capacity;
         this.hourlyRate = hourlyRate;
+    }
+
+    public void changeStatusToDeleted() {
+        this.status = MeetingRoomStatus.DELETED;
     }
 }

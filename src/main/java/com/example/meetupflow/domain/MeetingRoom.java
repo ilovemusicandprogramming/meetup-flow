@@ -27,6 +27,18 @@ public class MeetingRoom extends BaseEntity {
     private List<Reservation> reservations = new ArrayList<>();
 
     public static MeetingRoom createMeetingRoom(String name, int capacity, int hourlyRate) {
+        if(name == null || name.isBlank()){
+            throw new IllegalArgumentException("미팅룸 이름은 필수입니다.");
+        }
+
+        if(capacity <= 0 ){
+            throw new IllegalArgumentException("수용 인원은 1명 이상이어야 합니다.");
+        }
+
+        if(hourlyRate < 0 ){
+            throw new IllegalArgumentException("시간당 요금은 0원 이상이어야 합니다.");
+        }
+
         MeetingRoom meetingRoom = new MeetingRoom();
 
         meetingRoom.name = name;

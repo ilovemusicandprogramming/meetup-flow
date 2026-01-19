@@ -5,6 +5,7 @@ import com.example.meetupflow.repository.MeetingRoomRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,5 +30,22 @@ public class MeetingRoomService {
         meetingRoomRepository.save(meetingRoom);
 
         return meetingRoom.getId();
+    }
+
+    /**
+     * 미팅룸단건조회
+     */
+    @Transactional(readOnly = true)
+    public MeetingRoom findOne(Long id) {
+        return meetingRoomRepository.findById(id).get();
+    }
+
+    /**
+     * 미팅룸정보수정
+     */
+    @Transactional
+    public void updateMeetingRoom(Long id, String name, int capacity, int hourlyRate) {
+        MeetingRoom meetingRoom = meetingRoomRepository.findById(id).get();
+        meetingRoom.updateProfile(name, capacity, hourlyRate);
     }
 }

@@ -31,4 +31,14 @@ public class MeetingRoom extends BaseEntity {
 
         return meetingRoom;
     }
+
+    public void updateProfile(String name, int capacity, int hourlyRate) {
+        if(!this.reservations.isEmpty()){
+            throw new IllegalStateException("이미 예약된 건이 있는 회의실은 정보를 수정할 수 없습니다.");
+        }
+
+        this.name = name;
+        this.capacity = capacity;
+        this.hourlyRate = hourlyRate;
+    }
 }

@@ -2,16 +2,14 @@ package com.example.meetupflow.controller;
 
 import com.example.meetupflow.common.Result;
 import com.example.meetupflow.domain.MeetingRoom;
-import com.example.meetupflow.dto.meetingRoom.CreateMeetingRoomRequest;
-import com.example.meetupflow.dto.meetingRoom.CreateMeetingRoomResponse;
-import com.example.meetupflow.dto.meetingRoom.MeetingRoomListResponse;
+import com.example.meetupflow.domain.User;
+import com.example.meetupflow.dto.meetingRoom.UpdateMeetingRoomResponse;
+import com.example.meetupflow.dto.meetingRoom.*;
+import com.example.meetupflow.dto.user.UpdateUserResponse;
 import com.example.meetupflow.service.MeetingRoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,9 +28,22 @@ public class MeetingRoomController {
         return new Result(collect.size(), collect);
     }
 
+    @GetMapping("/meetingRooms/{id}")
+    public MeetingRoomResponse get(@PathVariable Long id) {
+        MeetingRoom findMeetingRoom = meetingRoomService.findOne(id);
+        return new MeetingRoomResponse(findMeetingRoom);
+    }
+
     @PostMapping("/meetingRooms")
     public CreateMeetingRoomResponse create(@RequestBody @Valid CreateMeetingRoomRequest request) {
         Long id = meetingRoomService.createMeetingRoom(request.getName(), request.getCapacity(), request.getHourlyRate());
         return new CreateMeetingRoomResponse(id);
+    }
+
+    @PatchMapping("/meetingRooms/{id}")
+    public UpdateMeetingRoomResponse update(@PathVariable("id") Long id, @RequestBody @Valid UpdateMeetingRoomRequest request){
+        meetingRoomService.updateMeetingRoom(id, request.getName(), request.getCapacity(), request.getHourlyRate());
+        MeetingRoom updateMeetingRoom = meetingRoomService.findOne(id);
+        return new UpdateMeetingRoomResponse(updateMeetingRoom);
     }
 }

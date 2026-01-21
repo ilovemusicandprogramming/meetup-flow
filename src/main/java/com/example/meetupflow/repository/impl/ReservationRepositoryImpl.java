@@ -6,6 +6,7 @@ import com.example.meetupflow.repository.ReservationRepositoryCustom;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -13,9 +14,12 @@ import java.util.List;
 
 import static com.example.meetupflow.domain.QReservation.reservation;
 
-@RequiredArgsConstructor
 public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+
+    public ReservationRepositoryImpl(EntityManager em) {
+        this.queryFactory = new JPAQueryFactory(em);
+    }
 
     @Override
     public List<Reservation> findOverlapping(Long meetingRoomId, LocalDateTime startTime, LocalDateTime endTime, Long currentId) {

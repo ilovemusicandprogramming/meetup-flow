@@ -17,7 +17,7 @@ public class MeetingRoom extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "meeting_room_id")
-    private Long Id;
+    private Long id;
     private String name;
     private int capacity;
     private int hourlyRate;

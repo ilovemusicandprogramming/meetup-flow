@@ -43,9 +43,21 @@ public class Reservation extends BaseEntity {
         reservation.reservationAt = LocalDateTime.now();
         reservation.hourlyRateSnapshot = meetingRoom.getHourlyRate();
         reservation.totalAmount = calculateTotalAmount(reservation.hourlyRateSnapshot, startTime, endTime);
-        reservation.status = ReservationStatus.PENDING; // 예약 대기 상태 등
+        reservation.status = ReservationStatus.PENDING;
 
         return reservation;
+    }
+
+    public void updateReservation(MeetingRoom meetingRoom, LocalDateTime startTime, LocalDateTime endTime) {
+        this.meetingRoom = meetingRoom;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.hourlyRateSnapshot = meetingRoom.getHourlyRate();
+        this.totalAmount = calculateTotalAmount(this.hourlyRateSnapshot, startTime, endTime);
+    }
+
+    public void changeStatusToCancel() {
+        this.status = ReservationStatus.CANCELLED;
     }
 
     private static double calculateTotalAmount(int hourlyRate, LocalDateTime startTime, LocalDateTime endTime) {

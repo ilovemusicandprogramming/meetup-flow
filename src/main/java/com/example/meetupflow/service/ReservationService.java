@@ -3,6 +3,7 @@ package com.example.meetupflow.service;
 import com.example.meetupflow.domain.MeetingRoom;
 import com.example.meetupflow.domain.Reservation;
 import com.example.meetupflow.domain.User;
+import com.example.meetupflow.domain.status.ReservationStatus;
 import com.example.meetupflow.repository.MeetingRoomRepository;
 import com.example.meetupflow.repository.ReservationRepository;
 import com.example.meetupflow.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -59,6 +61,44 @@ public class ReservationService {
         return reservation.getId();
     }
 
+    /**
+     * 예약수정
+     */
+    @Transactional
+    public void updateReservation(Long reservationId, Long meetingRoomId, LocalDateTime startTime, LocalDateTime endTime) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
+        if (reservation.getStatus() == ReservationStatus.PAID) {
+            throw new IllegalStateException("결제가 완료된 예약은 수정할 수 없습니다.");
+        }
+
+        MeetingRoom meetingRoom = meetingRoomRepository.findById(meetingRoomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회의실입니다."));
+
+        // validation
+        validateReservationTime(startTime, endTime);
+        checkTimeAvailability(meetingRoom.getId(), startTime, endTime, reservationId);
+
+        reservation.updateReservation(meetingRoom, startTime, endTime);
+    }
+
+
+    /**
+     * 예약취소
+     */
+    public void cancelReservation(Long id) {
+        Reservation reservation = reservationRepository.findById(id).get();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (reservation.getStartTime().minusDays(1).isBefore(now)) {
+            throw new IllegalStateException("예약 취소는 시작 시간 24시간 전까지만 가능합니다.");
+        }
+
+        reservation.changeStatusToCancel();
+    }
+    
     private void validateReservationTime(LocalDateTime startTime, LocalDateTime endTime) {
         if (startTime.isAfter(endTime) || startTime.isEqual(endTime)) {
             throw new IllegalArgumentException("종료 시간은 시작 시간보다 이후여야 합니다.");

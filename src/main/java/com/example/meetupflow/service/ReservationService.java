@@ -26,7 +26,8 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public List<Reservation> findReservations() {
-        return reservationRepository.findAll();
+//        return reservationRepository.findAll();
+        return reservationRepository.findAllWithUserAndRoom();
     }
 
     /**

@@ -51,6 +51,6 @@ public class Reservation extends BaseEntity {
     private static double calculateTotalAmount(int hourlyRate, LocalDateTime startTime, LocalDateTime endTime) {
         long minutes = ChronoUnit.MINUTES.between(startTime, endTime);
         double hours = minutes / 60.0;
-        return hours * hourlyRate;()
+        return hours * hourlyRate;
     }
 }

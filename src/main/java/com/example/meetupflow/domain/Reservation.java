@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -27,6 +28,7 @@ public class Reservation extends BaseEntity {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDateTime reservationAt;
+    private int hourlyRateSnapshot;
     private double totalAmount;
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
@@ -39,8 +41,16 @@ public class Reservation extends BaseEntity {
         reservation.startTime = startTime;
         reservation.endTime = endTime;
         reservation.reservationAt = LocalDateTime.now();
+        reservation.hourlyRateSnapshot = meetingRoom.getHourlyRate();
+        reservation.totalAmount = calculateTotalAmount(reservation.hourlyRateSnapshot, startTime, endTime);
         reservation.status = ReservationStatus.PENDING; // 예약 대기 상태 등
 
         return reservation;
+    }
+
+    private static double calculateTotalAmount(int hourlyRate, LocalDateTime startTime, LocalDateTime endTime) {
+        long minutes = ChronoUnit.MINUTES.between(startTime, endTime);
+        long hours = (minutes + 59) / 60; // 올림
+        return hours * hourlyRate;
     }
 }

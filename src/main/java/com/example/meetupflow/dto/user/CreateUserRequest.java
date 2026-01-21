@@ -2,11 +2,12 @@ package com.example.meetupflow.dto.user;
 
 import com.example.meetupflow.domain.Address;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateUserRequest {
 
     @NotEmpty

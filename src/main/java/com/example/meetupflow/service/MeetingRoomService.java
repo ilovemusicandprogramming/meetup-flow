@@ -19,6 +19,7 @@ public class MeetingRoomService {
     /**
      * 미팅룸목록조회
      */
+    @Transactional(readOnly = true)
     public List<MeetingRoom> findMeetingRoom() {
         return meetingRoomRepository.findAll();
     }
@@ -26,6 +27,7 @@ public class MeetingRoomService {
     /**
      * 미팅룸생성
      */
+    @Transactional
     public Long createMeetingRoom(String name, int capacity, int hourlyRate) {
         MeetingRoom meetingRoom = MeetingRoom.createMeetingRoom(name, capacity, hourlyRate);
         meetingRoomRepository.save(meetingRoom);
@@ -53,6 +55,7 @@ public class MeetingRoomService {
     /**
      * 미팅룸삭제
      */
+    @Transactional
     public void deleteMeetingRoom(Long id) {
         MeetingRoom meetingRoom = meetingRoomRepository.findById(id).get();
         meetingRoom.changeStatusToDeleted();

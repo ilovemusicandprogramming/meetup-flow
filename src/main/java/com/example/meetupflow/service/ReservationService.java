@@ -69,10 +69,6 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
 
-        if (reservation.getStatus() == ReservationStatus.PAID) {
-            throw new IllegalStateException("결제가 완료된 예약은 수정할 수 없습니다.");
-        }
-
         MeetingRoom meetingRoom = meetingRoomRepository.findById(meetingRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회의실입니다."));
 

@@ -37,6 +37,7 @@ public class PaymentService {
     public Long processPayment(Long reservationId, PaymentType paymentType) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
         String transactionId = UUID.randomUUID().toString();
 
         Payment payment = Payment.createPayment(reservation, paymentType, reservation.getTotalAmount(), transactionId);

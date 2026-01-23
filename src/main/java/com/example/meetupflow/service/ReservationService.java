@@ -4,6 +4,8 @@ import com.example.meetupflow.domain.MeetingRoom;
 import com.example.meetupflow.domain.Reservation;
 import com.example.meetupflow.domain.User;
 import com.example.meetupflow.domain.status.ReservationStatus;
+import com.example.meetupflow.dto.reservation.*;
+import com.example.meetupflow.exception.reservation.ReservationNotFoundException;
 import com.example.meetupflow.repository.MeetingRoomRepository;
 import com.example.meetupflow.repository.ReservationRepository;
 import com.example.meetupflow.repository.UserRepository;
@@ -27,29 +29,31 @@ public class ReservationService {
      * 예약목록조회
      */
     @Transactional(readOnly = true)
-    public List<Reservation> findReservations() {
-//        return reservationRepository.findAll();
-        return reservationRepository.findAllWithUserAndRoom();
+    public List<ReservationListResponse> findReservations() {
+        List<Reservation> reservation = reservationRepository.findAllWithUserAndRoom();
+        return reservation.stream()
+                .map(ReservationListResponse::new)
+                .toList();
     }
 
     /**
      * 예약단건조회
      */
     @Transactional(readOnly = true)
-    public Reservation findOne(Long id) {
-        return reservationRepository.findById(id).get();
+    public ReservationsResponse findOne(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException(id));
+
+        return new ReservationsResponse(reservation);
     }
 
     /**
      * 예약생성
      */
     @Transactional
-    public Long createReservation(Long meetingRoomId, LocalDateTime startTime, LocalDateTime endTime, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
-        MeetingRoom meetingRoom = meetingRoomRepository.findById(meetingRoomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회의실입니다."));
+    public CreateReservationResponse createReservation(Long meetingRoomId, LocalDateTime startTime, LocalDateTime endTime, Long userId) {
+        User user = findUserById(userId);
+        MeetingRoom meetingRoom = findMeetingRoomById(meetingRoomId);
 
         // validation
         validateReservationTime(startTime, endTime);
@@ -58,33 +62,33 @@ public class ReservationService {
         Reservation reservation = Reservation.createReservation(meetingRoom, user, startTime, endTime);
 
         reservationRepository.save(reservation);
-        return reservation.getId();
+        return new CreateReservationResponse(reservation.getId());
     }
 
     /**
      * 예약수정
      */
     @Transactional
-    public void updateReservation(Long reservationId, Long meetingRoomId, LocalDateTime startTime, LocalDateTime endTime) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
-
-        MeetingRoom meetingRoom = meetingRoomRepository.findById(meetingRoomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회의실입니다."));
+    public UpdateReservationResponse updateReservation(Long reservationId, Long meetingRoomId, LocalDateTime startTime, LocalDateTime endTime) {
+        Reservation reservation = findReservationById(reservationId);
+        MeetingRoom meetingRoom = findMeetingRoomById(meetingRoomId);
 
         // validation
         validateReservationTime(startTime, endTime);
         checkTimeAvailability(meetingRoom.getId(), startTime, endTime, reservationId);
 
         reservation.updateReservation(meetingRoom, startTime, endTime);
+
+        return new UpdateReservationResponse(reservation);
     }
 
 
     /**
      * 예약취소
      */
+    @Transactional
     public void cancelReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id).get();
+        Reservation reservation = findReservationById(id);
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -94,13 +98,15 @@ public class ReservationService {
 
         reservation.changeStatusToCancel();
     }
+
+    //=============기타메서드=============
     
     private void validateReservationTime(LocalDateTime startTime, LocalDateTime endTime) {
         if (startTime.isAfter(endTime) || startTime.isEqual(endTime)) {
             throw new IllegalArgumentException("종료 시간은 시작 시간보다 이후여야 합니다.");
         }
 
-        if (isNOtMultipleOf30Minutes(startTime) || isNOtMultipleOf30Minutes(endTime)) {
+        if (isNotMultipleOf30Minutes(startTime) || isNotMultipleOf30Minutes(endTime)) {
             throw new IllegalArgumentException("예약은 30분 단위로만 가능합니다. (예: 14:00, 14:30)");
         }
 
@@ -109,7 +115,7 @@ public class ReservationService {
         }
     }
 
-    private boolean isNOtMultipleOf30Minutes(LocalDateTime time) {
+    private boolean isNotMultipleOf30Minutes(LocalDateTime time) {
         int minute = time.getMinute();
         return minute != 0 && minute != 30;
     }
@@ -120,5 +126,20 @@ public class ReservationService {
         if(!overlapping.isEmpty()){
             throw new IllegalArgumentException("해당 시간대에 이미 예약이 존재합니다.");
         }
+    }
+
+    private Reservation findReservationById(Long reservationId) {
+        return reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+    }
+
+    private MeetingRoom findMeetingRoomById(Long meetingRoomId) {
+        return meetingRoomRepository.findById(meetingRoomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회의실입니다."));
+    }
+
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
     }
 }

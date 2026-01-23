@@ -2,7 +2,9 @@ package com.example.meetupflow.service;
 
 import com.example.meetupflow.domain.Address;
 import com.example.meetupflow.domain.User;
-import com.example.meetupflow.dto.user.UpdateUserRequest;
+import com.example.meetupflow.dto.reservation.ReservationListResponse;
+import com.example.meetupflow.dto.user.*;
+import com.example.meetupflow.exception.reservation.ReservationNotFoundException;
 import com.example.meetupflow.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -21,40 +25,49 @@ public class UserService {
     /**
      * 회원목록조회
      */
-    public List<User> findUsers() {
-        return userRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<UserListResponse> findUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(UserListResponse::new)
+                .toList();
     }
 
     /**
-     * 회원단건조회
+     * 회원단건조회 TODO 에러처리
+     * userresponse로 반환하면 재활용이 어렵다.. -> 그래서 일단은 entity를 반환
      */
     @Transactional(readOnly = true)
     public User findOne(Long id){
-        return userRepository.findById(id).get();
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(""));
     }
 
     /**
-     * 회원가입
+     * 회원가입 TODO 에러처리
      */
     @Transactional
-    public Long join(String name, String email, Address address) {
+    public CreateUserResponse join(String name, String email, Address address) {
         User user = User.createUser(name, email, address);
         userRepository.save(user);
-        return user.getId();
+        return CreateUserResponse.from(user);
     }
 
     /**
      * 회원정보수정
      */
     @Transactional
-    public void updateUser(Long id, String email, Address address) {
-        User user = userRepository.findById(id).get();
+    public UpdateUserResponse updateUser(Long id, String email, Address address) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(""));
         user.updateUserProfile(email, address);
+        return UpdateUserResponse.from(user);
     }
 
     /**
      * 회원탈퇴
      */
+    @Transactional
     public void withdrawUser(Long id) {
         User user = userRepository.findById(id).get();
         user.changeStatusToDeleted();

@@ -18,4 +18,8 @@ public class UpdateUserResponse {
         this.email = user.getEmail();
         this.address = user.getAddress();
     }
+
+    public static UpdateUserResponse from(User user) {
+        return new UpdateUserResponse(user);
+    }
 }

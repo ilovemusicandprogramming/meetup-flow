@@ -30,12 +30,10 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<CreateReservationResponse>> create(@RequestBody @Valid CreateReservationRequest request) {
-        CreateReservationResponse response = reservationService.createReservation(
-                request.getMeetingRoomId(), request.getStartTime(), request.getEndTime(), request.getUserId());
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.success(response,"예약 생성 완료"));
+                .body(ApiResponse.success(reservationService.createReservation(
+                        request.getMeetingRoomId(), request.getStartTime(), request.getEndTime(), request.getUserId()),"예약 생성 완료"));
     }
 
     @PatchMapping("/{id}")

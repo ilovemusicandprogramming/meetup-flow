@@ -30,8 +30,8 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public List<ReservationListResponse> findReservations() {
-        List<Reservation> reservation = reservationRepository.findAllWithUserAndRoom();
-        return reservation.stream()
+        List<Reservation> reservations = reservationRepository.findAllWithUserAndRoom();
+        return reservations.stream()
                 .map(ReservationListResponse::new)
                 .toList();
     }

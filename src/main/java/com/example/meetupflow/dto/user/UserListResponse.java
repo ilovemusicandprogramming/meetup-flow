@@ -1,6 +1,7 @@
 package com.example.meetupflow.dto.user;
 
 import com.example.meetupflow.domain.Address;
+import com.example.meetupflow.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,9 +12,9 @@ public class UserListResponse {
     private String email;
     private Address address;
 
-    public UserListResponse(String name, String email, Address address) {
-        this.name = name;
-        this.email = email;
-        this.address = address;
+    public UserListResponse(User user) {
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.address = user.getAddress();
     }
 }

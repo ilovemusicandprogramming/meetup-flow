@@ -25,4 +25,8 @@ public class UserResponse {
                 .map(reservation -> new ReservationDto(reservation))
                 .collect(Collectors.toList());
     }
+
+    public static UserResponse from(User user) {
+        return new UserResponse(user);
+    }
 }

@@ -35,12 +35,11 @@ public class UserService {
 
     /**
      * 회원단건조회 TODO 에러처리
-     * userresponse로 반환하면 재활용이 어렵다.. -> 그래서 일단은 entity를 반환
+     * useresponse로 반환하면 재활용이 어렵다.. -> 그래서 일단은 entity를 반환
      */
     @Transactional(readOnly = true)
     public User findOne(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException(""));
+        return getUser(id);
     }
 
     /**
@@ -58,8 +57,7 @@ public class UserService {
      */
     @Transactional
     public UpdateUserResponse updateUser(Long id, String email, Address address) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException(""));
+        User user = getUser(id);
         user.updateUserProfile(email, address);
         return UpdateUserResponse.from(user);
     }
@@ -69,7 +67,14 @@ public class UserService {
      */
     @Transactional
     public void withdrawUser(Long id) {
-        User user = userRepository.findById(id).get();
+        User user = getUser(id);
         user.changeStatusToDeleted();
+    }
+
+    //==== 기타메서드 =====//
+    private User getUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(""));
+        return user;
     }
 }

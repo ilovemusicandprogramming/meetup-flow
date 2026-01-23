@@ -99,7 +99,7 @@ public class ReservationService {
         reservation.changeStatusToCancel();
     }
 
-    //=============기타메서드=============
+    //=============기타메서드=============//
     
     private void validateReservationTime(LocalDateTime startTime, LocalDateTime endTime) {
         if (startTime.isAfter(endTime) || startTime.isEqual(endTime)) {

@@ -20,14 +20,12 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ReservationListResponse>>> list() {
-        List<ReservationListResponse> response = reservationService.findReservations();
-        return ResponseEntity.ok(ApiResponse.success(response, "예약 목록 조회 성공"));
+        return ResponseEntity.ok(ApiResponse.success(reservationService.findReservations(), "예약 목록 조회 성공"));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ReservationsResponse>> get(@PathVariable("id") Long id) {
-        ReservationsResponse response = reservationService.findOne(id);
-        return ResponseEntity.ok(ApiResponse.success(response, "예약 상세 조회 성공"));
+        return ResponseEntity.ok(ApiResponse.success(reservationService.findOne(id), "예약 상세 조회 성공"));
     }
 
     @PostMapping

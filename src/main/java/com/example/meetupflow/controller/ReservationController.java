@@ -1,56 +1,54 @@
 package com.example.meetupflow.controller;
 
-import com.example.meetupflow.common.Result;
-import com.example.meetupflow.domain.Reservation;
+import com.example.meetupflow.common.ApiResponse;
 import com.example.meetupflow.dto.reservation.*;
-import com.example.meetupflow.dto.user.UpdateUserRequest;
 import com.example.meetupflow.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/reservations")
 @RequiredArgsConstructor
 public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @GetMapping("/reservations")
-    public Result list() {
-        List<Reservation> findReservations = reservationService.findReservations();
-        List<ReservationListResponse> collect = findReservations.stream()
-                .map(ReservationListResponse::new)
-                .toList();
-        return new Result(collect.size(), collect);
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ReservationListResponse>>> list() {
+        List<ReservationListResponse> response = reservationService.findReservations();
+        return ResponseEntity.ok(ApiResponse.success(response, "예약 목록 조회 성공"));
     }
 
-    @GetMapping("/reservations/{id}")
-    public ReservationsResponse get(@PathVariable("id") Long id) {
-        Reservation findReservation = reservationService.findOne(id);
-        return new ReservationsResponse(findReservation);
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ReservationsResponse>> get(@PathVariable("id") Long id) {
+        ReservationsResponse response = reservationService.findOne(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "예약 상세 조회 성공"));
     }
 
-    @PostMapping("/reservations")
-    public CreateReservationResponse create(@RequestBody @Valid CreateReservationRequest request) {
-        Long id = reservationService.createReservation(
+    @PostMapping
+    public ResponseEntity<ApiResponse<CreateReservationResponse>> create(@RequestBody @Valid CreateReservationRequest request) {
+        CreateReservationResponse response = reservationService.createReservation(
                 request.getMeetingRoomId(), request.getStartTime(), request.getEndTime(), request.getUserId());
 
-        return new CreateReservationResponse(id);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response,"예약 생성 완료"));
     }
 
-    @PatchMapping("/reservations/{id}")
-    public UpdateReservationResponse update(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<UpdateReservationResponse>> update(
             @PathVariable("id") Long id, @RequestBody @Valid UpdateReservationRequest request) {
-        reservationService.updateReservation(id, request.getMeetingRoomId(), request.getStartTime(), request.getEndTime());
+        UpdateReservationResponse response = reservationService.updateReservation(id, request.getMeetingRoomId(), request.getStartTime(), request.getEndTime());
 
-        Reservation updateReservation = reservationService.findOne(id);
-        return new UpdateReservationResponse(updateReservation);
+        return ResponseEntity.ok(ApiResponse.success(response, "예약 수정 완료"));
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancel(@PathVariable Long id) {
         reservationService.cancelReservation(id);
         return ResponseEntity.noContent().build();

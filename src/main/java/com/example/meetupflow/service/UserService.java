@@ -73,8 +73,7 @@ public class UserService {
 
     //==== 기타메서드 =====//
     private User getUser(Long id) {
-        User user = userRepository.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException(""));
-        return user;
     }
 }

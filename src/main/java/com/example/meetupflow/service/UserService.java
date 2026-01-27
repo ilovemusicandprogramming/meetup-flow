@@ -2,18 +2,13 @@ package com.example.meetupflow.service;
 
 import com.example.meetupflow.domain.Address;
 import com.example.meetupflow.domain.User;
-import com.example.meetupflow.dto.reservation.ReservationListResponse;
 import com.example.meetupflow.dto.user.*;
-import com.example.meetupflow.exception.reservation.ReservationNotFoundException;
 import com.example.meetupflow.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

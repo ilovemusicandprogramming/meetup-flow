@@ -3,9 +3,8 @@ package com.example.meetupflow.service;
 import com.example.meetupflow.domain.MeetingRoom;
 import com.example.meetupflow.domain.Reservation;
 import com.example.meetupflow.domain.User;
-import com.example.meetupflow.domain.status.ReservationStatus;
 import com.example.meetupflow.dto.reservation.*;
-import com.example.meetupflow.exception.reservation.ReservationNotFoundException;
+import com.example.meetupflow.common.exception.reservation.ReservationNotFoundException;
 import com.example.meetupflow.repository.MeetingRoomRepository;
 import com.example.meetupflow.repository.ReservationRepository;
 import com.example.meetupflow.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

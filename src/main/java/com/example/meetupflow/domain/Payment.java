@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -30,6 +31,7 @@ public class Payment {
     private PaymentStatus status;
     private double amount;
     private String paymentKey;              // 결제사에서 발급한 키
+    @Column(unique = true, nullable = false)
     private String transactionId;           // 거래 ID
     private LocalDateTime requestedAt;      // 결제 요청 시각
     private LocalDateTime completedAt;      // 결제 완료 시각
@@ -39,13 +41,15 @@ public class Payment {
     private String bankCode;
     private String bankName;
     private LocalDateTime dueDate;
+    @Version
+    private Long version;
 
-    public static Payment createPayment(Reservation reservation, PaymentType paymentType, double totalAmount, String transactionId) {
+    public static Payment createPayment(Reservation reservation, PaymentType paymentType, double totalAmount) {
         Payment payment = new Payment();
 
         payment.reservation = reservation;
         payment.paymentType = paymentType;
-        payment.transactionId = transactionId;
+        payment.transactionId = generateTransactionId();
         payment.amount = reservation.getTotalAmount();
         payment.status = PaymentStatus.PENDING;
         payment.requestedAt = LocalDateTime.now();
@@ -107,5 +111,7 @@ public class Payment {
         }
     }
 
-
+    private static String generateTransactionId() {
+        return UUID.randomUUID().toString();
+    }
 }

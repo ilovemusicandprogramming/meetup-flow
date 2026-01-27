@@ -2,8 +2,7 @@ package com.example.meetupflow.domain;
 
 import com.example.meetupflow.common.BaseEntity;
 import com.example.meetupflow.domain.status.ReservationStatus;
-import com.example.meetupflow.exception.reservation.ReservationException;
-import com.example.meetupflow.exception.reservation.ReservationNotModifiableException;
+import com.example.meetupflow.common.exception.reservation.ReservationNotModifiableException;
 import jakarta.persistence.*;
 import lombok.Getter;
 

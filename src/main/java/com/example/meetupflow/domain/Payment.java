@@ -35,6 +35,10 @@ public class Payment {
     private LocalDateTime completedAt;      // 결제 완료 시각
     private LocalDateTime updatedAt;
     private String errorMessage;
+    private String virtualAccount;
+    private String bankCode;
+    private String bankName;
+    private LocalDateTime dueDate;
 
     public static Payment createPayment(Reservation reservation, PaymentType paymentType, double totalAmount, String transactionId) {
         Payment payment = new Payment();
@@ -49,10 +53,29 @@ public class Payment {
         return payment;
     }
 
+    /**
+     * 결제 처리 완료
+     * - 카드/간편결제: 즉시 COMPLETED
+     * - 가상계좌: PENDING (입금 대기)
+     */
     public void complete(PaymentResponse paymentResponse) {
-        this.status = PaymentStatus.COMPLETED;
-        this.completedAt = LocalDateTime.now();
-        this.reservation.confirm();
+        // 1. 상태 업데이트 (응답에서 받은 상태 그대로)
+        this.status = paymentResponse.getStatus();
+
+        // 2. 결제 수단별 처리
+        if (this.paymentType == PaymentType.VIRTUAL_ACCOUNT) {
+            // 가상계좌: 정보 저장 (입금 대기)
+            this.virtualAccount = paymentResponse.getVirtualAccount();
+            this.bankName = paymentResponse.getBankName();
+            this.dueDate = paymentResponse.getDueDate();
+            // 예약은 PENDING 상태 유지
+
+        } else {
+            // 카드/간편결제: 즉시 완료
+            this.completedAt = LocalDateTime.now();
+            this.reservation.confirm();  // 예약 확정
+        }
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void fail(String errorMessage) {
@@ -61,4 +84,28 @@ public class Payment {
         this.updatedAt = LocalDateTime.now();
         this.reservation.changeStatusToCancel();
     }
+
+    /**
+     * 가상계좌입금완료
+     */
+    public void updateStatusFromWebhook(PaymentStatus newStatus) {
+        validateStatusTransition(newStatus);
+
+        this.status = newStatus;
+        this.updatedAt = LocalDateTime.now();
+
+        // 입금 완료 시 예약 확정
+        if (newStatus == PaymentStatus.COMPLETED) {
+            this.completedAt = LocalDateTime.now();
+            this.reservation.confirm();
+        }
+    }
+
+    private void validateStatusTransition(PaymentStatus newStatus) {
+        if (this.status == PaymentStatus.COMPLETED) {
+            throw new IllegalStateException("이미 완료된 결제는 변경할 수 없습니다");
+        }
+    }
+
+
 }

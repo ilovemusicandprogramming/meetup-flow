@@ -30,6 +30,9 @@ public class PaymentResponse {
     private LocalDateTime requestedAt;      // 결제 요청 시각
     private LocalDateTime completedAt;      // 결제 완료 시각
     private String message;
+    private String virtualAccount;
+    private LocalDateTime dueDate;
+    private String bankName;
 
     public PaymentResponse(Payment payment) {
         paymentId = payment.getId();
@@ -40,6 +43,12 @@ public class PaymentResponse {
         transactionId = payment.getTransactionId();
         requestedAt = payment.getRequestedAt();
         completedAt = payment.getCompletedAt();
+        virtualAccount = payment.getVirtualAccount();
+        dueDate = LocalDateTime.now();
+    }
+
+    public static PaymentResponse from(Payment payment) {
+        return new PaymentResponse(payment);
     }
 
     public boolean isSuccess(){

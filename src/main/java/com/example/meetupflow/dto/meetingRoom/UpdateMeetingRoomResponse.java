@@ -1,21 +1,19 @@
 package com.example.meetupflow.dto.meetingRoom;
 
 import com.example.meetupflow.domain.MeetingRoom;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class UpdateMeetingRoomResponse {
-    private Long id;
-    private String name;
-    private int capacity;
-    private int hourlyRate;
-
-    public UpdateMeetingRoomResponse(MeetingRoom meetingRoom) {
-        this.id = meetingRoom.getId();
-        this.name = meetingRoom.getName();
-        this.capacity = meetingRoom.getCapacity();
-        this.hourlyRate = meetingRoom.getHourlyRate();
+public record UpdateMeetingRoomResponse(
+        Long id,
+        String name,
+        int capacity,
+        int hourlyRate
+) {
+    public static UpdateMeetingRoomResponse from(MeetingRoom meetingRoom) {
+        return new UpdateMeetingRoomResponse(
+                meetingRoom.getId(),
+                meetingRoom.getName(),
+                meetingRoom.getCapacity(),
+                meetingRoom.getHourlyRate()
+        );
     }
 }

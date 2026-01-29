@@ -2,16 +2,14 @@ package com.example.meetupflow.dto.user;
 
 import com.example.meetupflow.domain.Address;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CreateUserRequest {
-
-    @NotEmpty
-    private String name;
-    private String email;
-    private Address address;
+public record CreateUserRequest(
+        @NotEmpty
+        String name,
+        String email,
+        Address address
+) {
+    public static CreateUserRequest from(String name, String email, Address address) {
+        return new CreateUserRequest(name, email, address);
+    }
 }

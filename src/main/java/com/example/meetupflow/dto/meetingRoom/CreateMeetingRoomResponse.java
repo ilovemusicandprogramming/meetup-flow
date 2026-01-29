@@ -1,13 +1,8 @@
 package com.example.meetupflow.dto.meetingRoom;
 
-import lombok.Getter;
+public record CreateMeetingRoomResponse(Long id) {
 
-@Getter
-public class CreateMeetingRoomResponse {
-
-    private Long Id;
-
-    public CreateMeetingRoomResponse(Long id) {
-        Id = id;
+    public static CreateMeetingRoomResponse from(Long id) {
+        return new CreateMeetingRoomResponse(id);
     }
 }

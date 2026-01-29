@@ -2,25 +2,23 @@ package com.example.meetupflow.dto.reservation;
 
 import com.example.meetupflow.domain.Reservation;
 import com.example.meetupflow.domain.status.ReservationStatus;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
-@NoArgsConstructor
-public class ReservationDto {
-    private Long id;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private LocalDateTime reservationAt;
-    private ReservationStatus status;
-
-    public ReservationDto(Reservation reservation) {
-        id = reservation.getId();
-        startTime = reservation.getStartTime();
-        endTime = reservation.getEndTime();
-        reservationAt = reservation.getReservationAt();
-        status = reservation.getStatus();
+public record ReservationDto(
+        Long id,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        LocalDateTime reservationAt,
+        ReservationStatus status
+) {
+    public static ReservationDto from(Reservation reservation) {
+        return new ReservationDto(
+                reservation.getId(),
+                reservation.getStartTime(),
+                reservation.getEndTime(),
+                reservation.getReservationAt(),
+                reservation.getStatus()
+        );
     }
 }

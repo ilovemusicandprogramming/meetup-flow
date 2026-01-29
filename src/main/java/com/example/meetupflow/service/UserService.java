@@ -33,8 +33,8 @@ public class UserService {
      * useresponse로 반환하면 재활용이 어렵다.. -> 그래서 일단은 entity를 반환
      */
     @Transactional(readOnly = true)
-    public User findOne(Long id){
-        return getUser(id);
+    public UserResponse findUser(Long id){
+        return UserResponse.from(getUser(id));
     }
 
     /**

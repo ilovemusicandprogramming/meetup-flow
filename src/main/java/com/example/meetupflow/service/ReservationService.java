@@ -38,11 +38,9 @@ public class ReservationService {
      * 예약단건조회
      */
     @Transactional(readOnly = true)
-    public ReservationsResponse findOne(Long id) {
-        Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
-
-        return new ReservationsResponse(reservation);
+    public ReservationsResponse findReservation(Long id) {
+        return ReservationsResponse.from(reservationRepository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException(id)));
     }
 
     /**
@@ -60,7 +58,7 @@ public class ReservationService {
         Reservation reservation = Reservation.createReservation(meetingRoom, user, startTime, endTime);
 
         reservationRepository.save(reservation);
-        return new CreateReservationResponse(reservation.getId());
+        return CreateReservationResponse.from(reservation);
     }
 
     /**
@@ -77,7 +75,7 @@ public class ReservationService {
 
         reservation.updateReservation(meetingRoom, startTime, endTime);
 
-        return new UpdateReservationResponse(reservation);
+        return UpdateReservationResponse.from(reservation);
     }
 
 

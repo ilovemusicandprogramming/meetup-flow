@@ -15,8 +15,8 @@ public record ReservationListResponse(
         double totalAmount,
         ReservationStatus status
 ) {
-    public static ReservationListResponse from(Reservation reservation) {
-        return new ReservationListResponse(
+    public ReservationListResponse(Reservation reservation) {
+        this(
                 reservation.getId(),
                 reservation.getMeetingRoom().getId(),
                 reservation.getUser().getName(),

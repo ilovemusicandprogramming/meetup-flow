@@ -64,14 +64,14 @@ public class Payment {
      */
     public void complete(PaymentResponse paymentResponse) {
         // 1. 상태 업데이트 (응답에서 받은 상태 그대로)
-        this.status = paymentResponse.getStatus();
+        this.status = paymentResponse.status();
 
         // 2. 결제 수단별 처리
         if (this.paymentType == PaymentType.VIRTUAL_ACCOUNT) {
             // 가상계좌: 정보 저장 (입금 대기)
-            this.virtualAccount = paymentResponse.getVirtualAccount();
-            this.bankName = paymentResponse.getBankName();
-            this.dueDate = paymentResponse.getDueDate();
+            this.virtualAccount = paymentResponse.virtualAccount();
+            this.bankName = paymentResponse.bankName();
+            this.dueDate = paymentResponse.dueDate();
             // 예약은 PENDING 상태 유지
 
         } else {

@@ -8,20 +8,17 @@ import com.example.meetupflow.domain.Payment;
 import com.example.meetupflow.domain.Reservation;
 import com.example.meetupflow.domain.status.PaymentStatus;
 import com.example.meetupflow.domain.status.PaymentType;
+import com.example.meetupflow.dto.payment.CreatePaymentResponse;
 import com.example.meetupflow.dto.payment.PaymentRequest;
 import com.example.meetupflow.dto.payment.PaymentResponse;
 import com.example.meetupflow.repository.PaymentRepository;
 import com.example.meetupflow.repository.ReservationRepository;
-import com.querydsl.core.dml.DMLClause;
 import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -36,23 +33,23 @@ public class PaymentService {
      * 결제단건조회
      */
     @Transactional(readOnly = true)
-    public Payment findOne(Long paymentId) {
-        return paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new PaymentNotFoundException(paymentId));
+    public PaymentResponse findPayment(Long paymentId) {
+        return PaymentResponse.from(paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentNotFoundException(paymentId)));
     }
 
     /**
      * 결제
      */
     @Transactional
-    public Payment processPayment(Long reservationId, PaymentType paymentType) {
+    public CreatePaymentResponse processPayment(Long reservationId, PaymentType paymentType) {
         Payment payment = createPendingPayment(reservationId, paymentType);
 
         // 외부요청
-        PaymentRequest paymentRequest = PaymentRequest.from(payment);
-        PaymentResponse response = executeExternalPayment(paymentType, paymentRequest, payment);
+        PaymentRequest request = PaymentRequest.from(payment);
+        PaymentResponse response = executeExternalPayment(paymentType, request, payment);
 
-        return updatePaymentResult(payment.getId(), response);
+        return CreatePaymentResponse.from(updatePaymentResult(payment.getId(), response));
     }
 
     @Transactional
@@ -94,9 +91,14 @@ public class PaymentService {
         }
     }
 
+    private Payment getPayment(Long paymentId) {
+        return paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentNotFoundException(paymentId));
+    }
+
     @Transactional
     protected Payment updatePaymentResult(Long paymentId, PaymentResponse response) {
-        Payment payment = findOne(paymentId);
+        Payment payment = getPayment(paymentId);
         payment.complete(response);
         return payment;
     }
@@ -136,7 +138,7 @@ public class PaymentService {
                 throw new IllegalArgumentException("유효하지 않은 상태값입니다: " + statusString);
             }
 
-            // 상태 업데이트(dirt checking)
+            // 상태 업데이트(dirty checking)
             payment.updateStatusFromWebhook(newStatus);
 
             log.info("[Webhook] 결제 상태 업데이트 완료 - {} → {}",

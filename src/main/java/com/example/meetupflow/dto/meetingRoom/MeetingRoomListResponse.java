@@ -9,8 +9,8 @@ public record MeetingRoomListResponse(
         int hourlyRate
 ) {
 
-    public static MeetingRoomListResponse from(MeetingRoom meetingRoom) {
-        return new MeetingRoomListResponse(
+    public MeetingRoomListResponse(MeetingRoom meetingRoom) {
+        this(
                 meetingRoom.getId(),
                 meetingRoom.getName(),
                 meetingRoom.getCapacity(),

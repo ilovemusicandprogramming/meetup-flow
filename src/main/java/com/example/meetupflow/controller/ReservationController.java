@@ -25,7 +25,7 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ReservationsResponse>> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(ApiResponse.success(reservationService.findOne(id), "예약 상세 조회 성공"));
+        return ResponseEntity.ok(ApiResponse.success(reservationService.findReservation(id), "예약 상세 조회 성공"));
     }
 
     @PostMapping
@@ -33,15 +33,14 @@ public class ReservationController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success(reservationService.createReservation(
-                        request.getMeetingRoomId(), request.getStartTime(), request.getEndTime(), request.getUserId()),"예약 생성 완료"));
+                        request.meetingRoomId(), request.startTime(), request.endTime(), request.userId()),"예약 생성 완료"));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<UpdateReservationResponse>> update(
             @PathVariable("id") Long id, @RequestBody @Valid UpdateReservationRequest request) {
-        UpdateReservationResponse response = reservationService.updateReservation(id, request.getMeetingRoomId(), request.getStartTime(), request.getEndTime());
 
-        return ResponseEntity.ok(ApiResponse.success(response, "예약 수정 완료"));
+        return ResponseEntity.ok(ApiResponse.success(reservationService.updateReservation(id, request.meetingRoomId(), request.startTime(), request.endTime()), "예약 수정 완료"));
     }
 
     @DeleteMapping("/{id}")

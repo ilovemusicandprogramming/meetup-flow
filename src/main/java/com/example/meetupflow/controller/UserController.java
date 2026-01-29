@@ -29,26 +29,26 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> get(@PathVariable Long id){
-        return ResponseEntity.ok(ApiResponse.success(new UserResponse(userService.findOne(id)), "회원 상세 조회 성공"));
+        return ResponseEntity.ok(ApiResponse.success(userService.findUser(id), "회원 상세 조회 성공"));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<CreateUserResponse>> create(@RequestBody @Valid CreateUserRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.success(userService.join(request.getName(), request.getEmail(), request.getAddress()),"회원 가입 완료"));
+                .body(ApiResponse.success(userService.join(request.name(), request.email(), request.address()),"회원 가입 완료"));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<UpdateUserResponse>> update(
             @PathVariable("id") Long id, @RequestBody @Valid UpdateUserRequest request){
         Address newAddress = new Address(
-                request.getAddress().getCity(),
-                request.getAddress().getStreet(),
-                request.getAddress().getZipcode()
+                request.address().getCity(),
+                request.address().getStreet(),
+                request.address().getZipcode()
         );
 
-        return ResponseEntity.ok(ApiResponse.success(userService.updateUser(id, request.getEmail(), newAddress), "회원정보 수정 완료"));
+        return ResponseEntity.ok(ApiResponse.success(userService.updateUser(id, request.email(), newAddress), "회원정보 수정 완료"));
     }
 
     @DeleteMapping("/{id}")

@@ -8,8 +8,8 @@ public record UserListResponse(
         String email,
         Address address
 ) {
-    public static UserListResponse from(User user) {
-        return new UserListResponse(
+    public UserListResponse (User user) {
+        this(
                 user.getName(),
                 user.getEmail(),
                 user.getAddress()
